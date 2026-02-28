@@ -694,9 +694,8 @@ TileDataEnd:
 
 .BANK 1 SLOT 1
 .ORG $7FF0
-  .db "TMR SEGA"
-  .db 0,0
-  .db 0,0,0,0,0,0
-  .db $00,$00
-  .db $00,$00
-  .db $40
+  ; 16-byte SMS header at $7FF0-$7FFF
+  .db "TMR SEGA"      ; 8 bytes
+  .db $00,$00          ; reserved
+  .db $00,$00          ; checksum placeholder
+  .db $00,$00,$00,$4C  ; product/version + region/ROM size (placeholder)
