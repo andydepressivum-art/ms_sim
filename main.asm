@@ -88,14 +88,14 @@ WaitVBlank:
 InitVDP:
   ld hl, VDPRegs
   ld b, 0
-.loop:
+.vdp_loop:
   ld a, (hl)
   call WriteVDPReg
   inc hl
   inc b
   ld a, b
   cp 11
-  jr nz, .loop
+  jr nz, .vdp_loop
   ret
 
 WriteVDPReg:
@@ -113,11 +113,11 @@ LoadPalette:
 
   ld hl, PaletteData
   ld b, 16
-.loop:
+.pal_loop:
   ld a, (hl)
   out (VDP_DATA), a
   inc hl
-  djnz .loop
+  djnz .pal_loop
   ret
 
 SetVRAMWrite:
@@ -151,13 +151,13 @@ ClearNameTable:
 
   ld bc, 32*24
   xor a
-.loop:
+.nt_clear_loop:
   out (VDP_DATA), a
   out (VDP_DATA), a
   dec bc
   ld a, b
   or c
-  jr nz, .loop
+  jr nz, .nt_clear_loop
   ret
 
 InitGame:
@@ -332,7 +332,7 @@ SimTick:
 
   ld hl, city_map
   ld b, MAP_SIZE
-.loop:
+.sim_loop:
   ld a, (hl)
   cp BUILD_RES
   jr nz, .chkCom
@@ -349,7 +349,7 @@ SimTick:
   call AddMoney4
 .next:
   inc hl
-  djnz .loop
+  djnz .sim_loop
 
   ld a, 1
   ld (hud_dirty), a
@@ -566,12 +566,12 @@ DrawMoney3Digits:
 ; HL / BC -> A quotient, HL remainder
 DivHLByBC:
   ld a, 0
-.loop:
+.div_loop:
   or a
   sbc hl, bc
   jr c, .done
   inc a
-  jr .loop
+  jr .div_loop
 .done:
   add hl, bc
   ret
